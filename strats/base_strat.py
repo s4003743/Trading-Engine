@@ -1,7 +1,11 @@
+from enum import Enum
+from market.gbm import GBMMarket
 
-class Strategy():
-    def __init__(self) -> None:
-        pass
-    
-    def generate_signal(self, price_history):
+class Move(Enum):
+    BUY = 1
+    HOLD = 0
+    SELL = -1
+
+class Strategy():   
+    def generate_signal(self, market):
         raise NotImplementedError
