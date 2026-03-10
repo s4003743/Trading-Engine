@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from strats.base_strat import Move
 
 def plot_equity(equity_history, market_prices=None, trade_history=None):
-    fig, ax1 = plt.subplots(figsize=(12,6))
+    fig, ax1 = plt.subplots(figsize=(10,5))
     ax2 = None  # initialize
 
     # Plot portfolio equity
