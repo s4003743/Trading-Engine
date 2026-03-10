@@ -1,4 +1,4 @@
-from base_strat import Strategy, Move
+from .base_strat import Strategy, Move
 import numpy as np
 from market.gbm import GBMMarket
 
@@ -36,4 +36,4 @@ if __name__ == "__main__":
     for _ in range(50):
         market.step()
         signal = strategy.generate_signal(market)
-        print(f"Time {market.get_time()}, Price {market.get_price():.2f}, Signal {signal}")
+        print(f"Time {market.get_time()}, Price {market.get_price():.2f}, Signal {signal.name}")
