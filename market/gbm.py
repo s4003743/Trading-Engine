@@ -3,7 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 class GBMMarket:
-    def __init__(self, mu, sigma, S0, dt:float=1, seed_num=None):
+    def __init__(self, mu, sigma, S0, dt:float=1/252, seed_num=None):
         if seed_num is not None:
             np.random.seed(seed_num)
 

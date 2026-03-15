@@ -18,13 +18,6 @@ def plot_equity(equity_history, market_prices=None, trade_history=None):
         ax2.set_ylabel('Market Price', color='brown')
         ax2.tick_params(axis='y', labelcolor='brown')
 
-    # Overlay trades
-    if trade_history is not None and not trade_history.empty:
-        buy_trades = trade_history[trade_history['signal'] == Move.BUY]
-        sell_trades = trade_history[trade_history['signal'] == Move.SELL]
-        ax1.scatter(buy_trades['time'], buy_trades['price'], color='green', marker='^', s=100, label='BUY')
-        ax1.scatter(sell_trades['time'], sell_trades['price'], color='red', marker='v', s=100, label='SELL')
-
     # Legend (combined from both axes)
     lines, labels = ax1.get_legend_handles_labels()
     if ax2 is not None:
@@ -36,3 +29,9 @@ def plot_equity(equity_history, market_prices=None, trade_history=None):
     plt.title('Portfolio Equity and Market Price with Trades')
     plt.grid(True)
     plt.show()
+
+def plot_drawdown():
+    pass
+
+def plot_distribution():
+    pass

@@ -12,42 +12,35 @@ DAYS_IN_YEAR = 252
 
 class Backtester():
 
-    def __init__(self, market: GBMMarket, strategy: Strategy, portfolio: Portfolio) -> None:
-        self.market = market
-        self.strategy = strategy
-        self.portfolio = portfolio
+    def __init__(self, market_factory, strategy_factory, portfolio_factory) -> None:
+        self.market_factory = market_factory
+        self.strategy_factory = strategy_factory
+        self.portfolio_factory = portfolio_factory
 
-    def run(self, num_years) -> None:
+    def run(self, num_years, plot=False) -> dict:
         """
         Run market and strategy and track portfolio status. 
         Provides stats on the success of the strategy as well 
         as a plot.
         """
-
-        start_portfolio = f"Cash: ${self.portfolio.cash:.2f} | Position: {self.portfolio.position}"
+        market = self.market_factory()
+        strategy = self.strategy_factory()
+        portfolio = self.portfolio_factory(strategy, market)
+        result = {}
 
         for _ in range(DAYS_IN_YEAR * num_years):
-            self.market.step()
-            self.portfolio.update_portfolio()
+            market.step()
+            portfolio.update_portfolio()
         
-        trade_history = pd.DataFrame(self.portfolio.get_trade_history(), columns=['time','signal','price','position'])
-        equity_history = self.portfolio.get_equity_history()
-        trade_info = trade_stats(pd.DataFrame(trade_history))
+        trade_history = pd.DataFrame(portfolio.get_trade_history(), columns=['time','signal','price','position'])
+        equity_history = portfolio.get_equity_history()
 
-        print("\n---STARTING STATE---\n")
-        print(start_portfolio)
-        print("\n---FINAL STATE---\n")
-        print(self.portfolio)
-        print("\n---FINAL EQUITY---\n")
-        print(f"Equity: ${self.portfolio.get_equity(self.market.get_price()):.2f}")
-        print("\n---FINAL STATS---\n")
+        result = {
+            "equity" : equity_history,
+            "trades" : trade_history,
+        }
 
-        if trade_info is not None:
-            print(f"Number of trades: {trade_info['n_trades']}")
-            print(f"Win rate: {trade_info['win_rate']:.2f}")
-            print(f"Avg return: {trade_info['avg_return']:.2f}")
-        print(f"Max drawdown: {max_drawdown(equity_history):.2f}")
-        print(f"Sharpe ratio: {sharpe_ratio(equity_history):.2f}")
-        print(f"Total return: {total_return(equity_history):.2f}\n")
+        if plot:
+            plot_equity(equity_history, portfolio.market.get_price_history(), trade_history)
 
-        plot_equity(self.portfolio.get_equity_history(), self.portfolio.market.get_price_history(), trade_history)
+        return result
